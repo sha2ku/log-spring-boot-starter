@@ -29,3 +29,7 @@ public class MQLogHandler implements LogHandler {
 1. `replaceMultipleParameterExpression` 只支持 `#user.name` 或者 `#name` 的形式。
 2. `replaceExpression` 除了支持以上形式外还支持静态方法表达式和 bean 方法表达式。（bean 方法表达式需注意 bean 名称应为实现类 bean 名称。例如：testServiceImpl 而不是
    testService）
+
+## How to use
+
+see [log-demo](https://github.com/ming-lz/log-demo)
