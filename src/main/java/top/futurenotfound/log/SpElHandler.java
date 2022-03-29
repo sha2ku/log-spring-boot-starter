@@ -3,9 +3,7 @@ package top.futurenotfound.log;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.EvaluationException;
 import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Component;
 
@@ -29,23 +27,18 @@ public class SpElHandler {
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
             String expression = matcher.group();
-            String value = replaceBeanExpression(evaluationContext, expression, String.class);
-            if (value != null) matcher.appendReplacement(buffer, value);
+            try {
+                String value = replaceExpression(evaluationContext, expression, String.class);
+                matcher.appendReplacement(buffer, value);
+            } catch (Exception ignored) {
+                //do nothing
+            }
         }
         matcher.appendTail(buffer);
         return buffer.toString();
     }
 
     public <T> T replaceExpression(EvaluationContext evaluationContext, String expression, Class<T> clazz) {
-        try {
-            return parser.parseExpression(expression).getValue(evaluationContext, clazz);
-        } catch (EvaluationException | ParseException e) {
-            log.error(e.getMessage());
-            return null;
-        }
-    }
-
-    public <T> T replaceBeanExpression(EvaluationContext evaluationContext, String expression, Class<T> clazz) {
-        return replaceExpression(evaluationContext, expression, clazz);
+        return parser.parseExpression(expression).getValue(evaluationContext, clazz);
     }
 }

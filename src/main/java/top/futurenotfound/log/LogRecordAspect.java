@@ -9,9 +9,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.context.expression.MapAccessor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
+import top.futurenotfound.log.handler.LogHandler;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -44,7 +46,10 @@ public class LogRecordAspect {
         Object[] args = joinPoint.getArgs();
         String[] params = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
         StandardEvaluationContext context = new StandardEvaluationContext();
+        //spel bean expression
         context.setBeanResolver(new BeanFactoryResolver(applicationContext));
+        //spel map expression
+        context.addPropertyAccessor(new MapAccessor());
 
         try {
             int size = Objects.requireNonNull(params).length;
@@ -52,6 +57,7 @@ public class LogRecordAspect {
             for (int index = 0; index < size; index++) {
                 variables.put(params[index], args[index]);
             }
+            //spel object/parameter expression
             context.setVariables(variables);
         } catch (Exception e) {
             log.error("cannot resolver request params' name.");
@@ -61,7 +67,7 @@ public class LogRecordAspect {
         String operatorExpression = logRecord.operatorExpression();
 
         String logContent = spElHandler.replaceMultipleParameterExpression(context, contentExpression);
-        String operator = spElHandler.replaceBeanExpression(context, operatorExpression, String.class);
+        String operator = spElHandler.replaceExpression(context, operatorExpression, String.class);
 
         LogInfo currentLog = new LogInfo();
         currentLog.setOperator(operator);
