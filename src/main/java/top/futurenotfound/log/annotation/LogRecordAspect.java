@@ -1,4 +1,4 @@
-package top.futurenotfound.log;
+package top.futurenotfound.log.annotation;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,10 @@ import org.springframework.context.expression.MapAccessor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
+import top.futurenotfound.log.LogHandler;
+import top.futurenotfound.log.domain.LogInfo;
+import top.futurenotfound.log.util.SpElResolver;
+import top.futurenotfound.log.util.ThreadPoolExecutorHandler;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -27,11 +31,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class LogRecordAspect {
 
     private final LogHandler logHandler;
-    private final SpElHandler spElHandler;
+    private final SpElResolver spElResolver;
     private final ApplicationContext applicationContext;
-    private final ExecutorThreadHandler executorThreadHandler;
+    private final ThreadPoolExecutorHandler threadPoolExecutorHandler;
 
-    @Pointcut("@annotation(top.futurenotfound.log.LogRecord)")
+    @Pointcut("@annotation(top.futurenotfound.log.annotation.LogRecord)")
     public void pointcut() {
         //nothing to do
     }
@@ -68,17 +72,14 @@ public class LogRecordAspect {
         String operatorExpression = logRecord.operatorExpression();
         String timestampExpression = logRecord.timestampExpression();
 
-        String content = spElHandler.replaceMultipleParameterExpression(evaluationContext, contentExpression);
-        String operator = spElHandler.replaceExpression(evaluationContext, operatorExpression, String.class);
-        String timestamp = spElHandler.replaceExpression(evaluationContext, timestampExpression, String.class);
+        String content = spElResolver.replaceMultipleParameterExpression(evaluationContext, contentExpression);
+        String operator = spElResolver.replaceExpression(evaluationContext, operatorExpression, String.class);
+        String timestamp = spElResolver.replaceExpression(evaluationContext, timestampExpression, String.class);
 
-        LogInfo currentLog = new LogInfo();
-        currentLog.setOperator(operator);
-        currentLog.setLogContent(content);
-        currentLog.setTimestamp(timestamp);
+        LogInfo currentLogInfo = new LogInfo(operator, timestamp, content);
 
-        ThreadPoolExecutor threadPoolExecutor = executorThreadHandler.getLogHandlePool();
-        threadPoolExecutor.execute(() -> logHandler.handle(currentLog));
+        ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorHandler.getLogExecutorPool();
+        threadPoolExecutor.execute(() -> logHandler.handle(currentLogInfo));
 
         return joinPoint.proceed();
     }

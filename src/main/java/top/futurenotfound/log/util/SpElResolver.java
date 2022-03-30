@@ -1,4 +1,4 @@
-package top.futurenotfound.log;
+package top.futurenotfound.log.util;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class SpElHandler {
+public class SpElResolver {
     private static final ExpressionParser parser = new SpelExpressionParser();
 
     /**

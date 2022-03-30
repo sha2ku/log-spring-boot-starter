@@ -1,4 +1,4 @@
-package top.futurenotfound.log;
+package top.futurenotfound.log.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
@@ -14,23 +14,23 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 @Getter
-public class ExecutorThreadHandler {
-    private ThreadPoolExecutor logHandlePool;
+public class ThreadPoolExecutorHandler {
+    private ThreadPoolExecutor logExecutorPool;
 
     @PostConstruct
     public void init() {
-        log.info("log-handle-pool init");
-        logHandlePool = new ThreadPoolExecutor(
-                200, 300,
+        log.info("log-executor-pool init");
+        logExecutorPool = new ThreadPoolExecutor(
+                100, 200,
                 60, TimeUnit.SECONDS,
                 new LinkedBlockingDeque<>(100000),
-                new ThreadFactoryBuilder().setNameFormat("log-handle-pool-%d").build(),
+                new ThreadFactoryBuilder().setNameFormat("log-executor-pool-%d").build(),
                 new ThreadPoolExecutor.AbortPolicy());
     }
 
     @PreDestroy
     public void destroy() {
-        logHandlePool.shutdown();
-        log.warn("log-handle-pool destroy");
+        logExecutorPool.shutdown();
+        log.warn("log-executor-pool destroy");
     }
 }

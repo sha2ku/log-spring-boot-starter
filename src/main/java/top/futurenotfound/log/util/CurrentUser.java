@@ -1,4 +1,4 @@
-package top.futurenotfound.log;
+package top.futurenotfound.log.util;
 
 public class CurrentUser {
     private static final ThreadLocal<String> threadLocal = new ThreadLocal<>();
