@@ -13,7 +13,6 @@ import org.springframework.context.expression.MapAccessor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
-import top.futurenotfound.log.handler.LogHandler;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -47,11 +46,11 @@ public class LogRecordAspect {
 
         Object[] args = joinPoint.getArgs();
         String[] params = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
-        StandardEvaluationContext context = new StandardEvaluationContext();
+        StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         //spel bean expression
-        context.setBeanResolver(new BeanFactoryResolver(applicationContext));
+        evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
         //spel map expression
-        context.addPropertyAccessor(new MapAccessor());
+        evaluationContext.addPropertyAccessor(new MapAccessor());
 
         try {
             int size = Objects.requireNonNull(params).length;
@@ -60,21 +59,23 @@ public class LogRecordAspect {
                 variables.put(params[index], args[index]);
             }
             //spel object/parameter expression
-            context.setVariables(variables);
+            evaluationContext.setVariables(variables);
         } catch (Exception e) {
             log.error("cannot resolver request params' name.");
         }
 
         String contentExpression = logRecord.contentExpression();
         String operatorExpression = logRecord.operatorExpression();
+        String timestampExpression = logRecord.timestampExpression();
 
-        String logContent = spElHandler.replaceMultipleParameterExpression(context, contentExpression);
-        String operator = spElHandler.replaceExpression(context, operatorExpression, String.class);
+        String content = spElHandler.replaceMultipleParameterExpression(evaluationContext, contentExpression);
+        String operator = spElHandler.replaceExpression(evaluationContext, operatorExpression, String.class);
+        String timestamp = spElHandler.replaceExpression(evaluationContext, timestampExpression, String.class);
 
         LogInfo currentLog = new LogInfo();
         currentLog.setOperator(operator);
-        currentLog.setLogContent(logContent);
-        currentLog.setTimestamp(System.currentTimeMillis());
+        currentLog.setLogContent(content);
+        currentLog.setTimestamp(timestamp);
 
         ThreadPoolExecutor threadPoolExecutor = executorThreadHandler.getLogHandlePool();
         threadPoolExecutor.execute(() -> logHandler.handle(currentLog));

@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class LogInfo {
     private String operator;
-    private long timestamp;
+    private String timestamp;
     private String logContent;
 }

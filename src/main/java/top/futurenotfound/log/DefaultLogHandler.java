@@ -1,7 +1,6 @@
-package top.futurenotfound.log.handler;
+package top.futurenotfound.log;
 
 import lombok.extern.slf4j.Slf4j;
-import top.futurenotfound.log.LogInfo;
 
 @Slf4j
 public class DefaultLogHandler implements LogHandler {
