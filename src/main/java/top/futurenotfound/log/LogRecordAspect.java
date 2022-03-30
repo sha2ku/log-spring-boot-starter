@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Aspect
 @Slf4j
@@ -29,6 +30,7 @@ public class LogRecordAspect {
     private final LogHandler logHandler;
     private final SpElHandler spElHandler;
     private final ApplicationContext applicationContext;
+    private final ExecutorThreadHandler executorThreadHandler;
 
     @Pointcut("@annotation(top.futurenotfound.log.LogRecord)")
     public void pointcut() {
@@ -74,7 +76,8 @@ public class LogRecordAspect {
         currentLog.setLogContent(logContent);
         currentLog.setTimestamp(System.currentTimeMillis());
 
-        logHandler.handle(currentLog);
+        ThreadPoolExecutor threadPoolExecutor = executorThreadHandler.getLogHandlePool();
+        threadPoolExecutor.execute(() -> logHandler.handle(currentLog));
 
         return joinPoint.proceed();
     }
