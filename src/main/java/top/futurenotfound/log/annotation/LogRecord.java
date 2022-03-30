@@ -11,4 +11,6 @@ public @interface LogRecord {
     String operatorExpression() default "T(top.futurenotfound.log.util.CurrentUser).get()";
 
     String timestampExpression() default "T(java.lang.System).currentTimeMillis().toString()";
+
+    String nullFillWord() default "null";
 }

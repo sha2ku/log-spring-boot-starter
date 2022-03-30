@@ -21,7 +21,7 @@ public class SpElResolver {
      * <p>
      * e.g {@code "sple test: #user.name do something in #datetime"}
      */
-    public String replaceMultipleParameterExpression(EvaluationContext evaluationContext, String content) {
+    public String replaceMultipleParameterExpression(EvaluationContext evaluationContext, String content, String nullFillWord) {
         Pattern pattern = Pattern.compile("#[\\w\\\\.]+");
         Matcher matcher = pattern.matcher(content);
         StringBuffer buffer = new StringBuffer();
@@ -29,6 +29,7 @@ public class SpElResolver {
             String expression = matcher.group();
             try {
                 String value = replaceExpression(evaluationContext, expression, String.class);
+                if (value == null) value = nullFillWord;
                 matcher.appendReplacement(buffer, value);
             } catch (Exception ignored) {
                 //do nothing
