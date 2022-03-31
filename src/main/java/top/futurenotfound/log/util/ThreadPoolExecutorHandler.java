@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import top.futurenotfound.log.properties.LogExecutorPoolProperties;
-import top.futurenotfound.log.properties.LogProperties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,23 +15,24 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 @Getter
 public class ThreadPoolExecutorHandler {
-    private final LogProperties logProperties;
+    private final LogExecutorPoolProperties logExecutorPoolProperties;
     private ThreadPoolExecutor logExecutorPool;
 
-    public ThreadPoolExecutorHandler(LogProperties logProperties) {
-        this.logProperties = logProperties;
+    public ThreadPoolExecutorHandler(LogExecutorPoolProperties logExecutorPoolProperties) {
+        this.logExecutorPoolProperties = logExecutorPoolProperties;
     }
 
     @PostConstruct
     public void init() {
         log.info("log-executor-pool init");
-        LogExecutorPoolProperties poolProperties = logProperties.getExecutorPool();
         logExecutorPool = new ThreadPoolExecutor(
-                poolProperties.getCorePoolSize(), poolProperties.getMaximumPoolSize(),
-                poolProperties.getKeepAliveTime(), poolProperties.getTimeUnit(),
-                new LinkedBlockingDeque<>(poolProperties.getQueueCapacity()),
+                logExecutorPoolProperties.getCorePoolSize(),
+                logExecutorPoolProperties.getMaximumPoolSize(),
+                logExecutorPoolProperties.getKeepAliveTime(),
+                logExecutorPoolProperties.getTimeUnit(),
+                new LinkedBlockingDeque<>(logExecutorPoolProperties.getQueueCapacity()),
                 new ThreadFactoryBuilder().setNameFormat("log-executor-pool-%d").build(),
-                poolProperties.getRejectedPolicy().getHandler());
+                logExecutorPoolProperties.getRejectedPolicy().getHandler());
     }
 
     @PreDestroy
