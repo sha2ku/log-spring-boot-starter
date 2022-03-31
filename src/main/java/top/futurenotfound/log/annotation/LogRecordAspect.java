@@ -14,7 +14,7 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import top.futurenotfound.log.LogHandler;
-import top.futurenotfound.log.domain.LogInfo;
+import top.futurenotfound.log.LogInfo;
 import top.futurenotfound.log.util.SpElResolver;
 import top.futurenotfound.log.util.ThreadPoolExecutorHandler;
 

@@ -1,4 +1,4 @@
-package top.futurenotfound.log.domain;
+package top.futurenotfound.log;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
