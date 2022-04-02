@@ -17,18 +17,16 @@ public class SpElResolver {
     private static final ExpressionParser parser = new SpelExpressionParser();
 
     /**
-     * just support spel parameter expression.
-     * <p>
-     * e.g {@code "sple test: #user.name do something in #datetime"}
+     * multiple expression must be enclosed in backquotes({@code `})
      */
-    public String replaceMultipleParameterExpression(EvaluationContext evaluationContext, String content, String nullFillWord) {
-        Pattern pattern = Pattern.compile("#[\\w\\\\.]+");
+    public String multipleExpression(EvaluationContext evaluationContext, String content, String nullFillWord) {
+        Pattern pattern = Pattern.compile("`(.*?)`");
         Matcher matcher = pattern.matcher(content);
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            String expression = matcher.group();
+            String expression = matcher.group().replace("`", "");
             try {
-                String value = replaceExpression(evaluationContext, expression, String.class);
+                String value = singleExpression(evaluationContext, expression, String.class);
                 if (value == null) value = nullFillWord;
                 matcher.appendReplacement(buffer, value);
             } catch (Exception ignored) {
@@ -39,7 +37,7 @@ public class SpElResolver {
         return buffer.toString();
     }
 
-    public <T> T replaceExpression(EvaluationContext evaluationContext, String expression, Class<T> clazz) {
+    public <T> T singleExpression(EvaluationContext evaluationContext, String expression, Class<T> clazz) {
         return parser.parseExpression(expression).getValue(evaluationContext, clazz);
     }
 }

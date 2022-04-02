@@ -26,9 +26,21 @@ public class MQLogHandler implements LogHandler {
 
 ## 其他
 
-1. `replaceMultipleParameterExpression` 只支持 `#user.name` 或者 `#name` 的形式。
-2. `replaceExpression` 除了支持以上形式外还支持静态方法表达式和 bean 方法表达式。（bean 方法表达式需注意 bean 名称应为实现类 bean 名称。例如：testServiceImpl 而不是
-   testService）
+1. `multipleExpression` 为多表达式解析方法，传入的语句中的 SpEL **需使用反引号 `` ` `` 括起来**，例：`
+
+```java  
+@LogRecord(
+    contentExpression = "金额变更: 金额从 `@testServiceImpl.getAmountByOrderId(#orderInfo.orderId)` 元变更为 `#orderInfo.newAmount` 元"
+)
+```
+
+2. `singleExpression` 为单表达式解析方法，SpEL 语句**无需使用反引号 `` ` `` 括起来**，例：
+
+```java  
+@LogRecord(
+    operatorExpression = "@testServiceImpl.getUsernameById(#orderInfo.id)"
+)
+```
 
 ## How to use
 

@@ -73,9 +73,9 @@ public class LogRecordAspect {
         String timestampExpression = logRecord.timestampExpression();
         String nullFillWord = logRecord.nullFillWord();
 
-        String content = spElResolver.replaceMultipleParameterExpression(evaluationContext, contentExpression, nullFillWord);
-        String operator = spElResolver.replaceExpression(evaluationContext, operatorExpression, String.class);
-        String timestamp = spElResolver.replaceExpression(evaluationContext, timestampExpression, String.class);
+        String content = spElResolver.multipleExpression(evaluationContext, contentExpression, nullFillWord);
+        String operator = spElResolver.singleExpression(evaluationContext, operatorExpression, String.class);
+        String timestamp = spElResolver.singleExpression(evaluationContext, timestampExpression, String.class);
 
         LogInfo currentLogInfo = new LogInfo(operator, timestamp, content);
 
