@@ -26,7 +26,7 @@ public class MQLogHandler implements LogHandler {
 
 ## 其他
 
-1. `multipleExpression` 为多表达式解析方法，传入的语句中的 SpEL **需使用反引号 `` ` `` 括起来**，例：`
+1. `multipleExpression` 为多表达式解析方法，传入的语句中的 SpEL **需使用反引号 `` ` `` 括起来**，例：
 
     ```java  
     @LogRecord(
