@@ -28,19 +28,19 @@ public class MQLogHandler implements LogHandler {
 
 1. `multipleExpression` 为多表达式解析方法，传入的语句中的 SpEL **需使用反引号 `` ` `` 括起来**，例：`
 
-```java  
-@LogRecord(
-    contentExpression = "金额变更: 金额从 `@testServiceImpl.getAmountByOrderId(#orderInfo.orderId)` 元变更为 `#orderInfo.newAmount` 元"
-)
-```
+    ```java  
+    @LogRecord(
+        contentExpression = "金额变更: 金额从 `@testServiceImpl.getAmountByOrderId(#orderInfo.orderId)` 元变更为 `#orderInfo.newAmount` 元"
+    )
+    ```
 
 2. `singleExpression` 为单表达式解析方法，SpEL 语句**无需使用反引号 `` ` `` 括起来**，例：
 
-```java  
-@LogRecord(
-    operatorExpression = "@testServiceImpl.getUsernameById(#orderInfo.id)"
-)
-```
+    ```java  
+    @LogRecord(
+        operatorExpression = "@testServiceImpl.getUsernameById(#orderInfo.id)"
+    )
+    ```
 
 ## How to use
 
