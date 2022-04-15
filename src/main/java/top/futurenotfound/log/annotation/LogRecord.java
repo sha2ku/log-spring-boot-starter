@@ -13,4 +13,6 @@ public @interface LogRecord {
     String timestampExpression() default "T(java.lang.System).currentTimeMillis().toString()";
 
     String nullFillWord() default "null";
+
+    String modelName();
 }

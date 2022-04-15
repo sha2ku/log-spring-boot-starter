@@ -9,4 +9,6 @@ public class LogInfo {
     private String operator;
     private String timestamp;
     private String logContent;
+
+    private String modelName;
 }

@@ -72,12 +72,13 @@ public class LogRecordAspect {
         String operatorExpression = logRecord.operatorExpression();
         String timestampExpression = logRecord.timestampExpression();
         String nullFillWord = logRecord.nullFillWord();
+        String modelName = logRecord.modelName();
 
         String content = spElResolver.multipleExpression(evaluationContext, contentExpression, nullFillWord);
         String operator = spElResolver.singleExpression(evaluationContext, operatorExpression, String.class);
         String timestamp = spElResolver.singleExpression(evaluationContext, timestampExpression, String.class);
 
-        LogInfo currentLogInfo = new LogInfo(operator, timestamp, content);
+        LogInfo currentLogInfo = new LogInfo(operator, timestamp, content, modelName);
 
         ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorHandler.getLogExecutorPool();
         threadPoolExecutor.execute(() -> logHandler.handle(currentLogInfo));
