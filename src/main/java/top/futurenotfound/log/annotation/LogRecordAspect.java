@@ -42,6 +42,8 @@ public class LogRecordAspect {
 
     @Around("pointcut()")
     public Object joinPoint(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = joinPoint.proceed();
+
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Class<?> clazz = joinPoint.getTarget().getClass();
         Method method = clazz.getDeclaredMethod(signature.getName(), signature.getMethod().getParameterTypes());
@@ -55,7 +57,9 @@ public class LogRecordAspect {
         evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
         //spel map expression
         evaluationContext.addPropertyAccessor(new MapAccessor());
-
+        //add result context
+        evaluationContext.setVariable("_result", result);
+        //add args context
         try {
             int size = Objects.requireNonNull(params).length;
             Map<String, Object> variables = new HashMap<>(size);
@@ -83,6 +87,6 @@ public class LogRecordAspect {
         ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorHandler.getLogExecutorPool();
         threadPoolExecutor.execute(() -> logHandler.handle(currentLogInfo));
 
-        return joinPoint.proceed();
+        return result;
     }
 }
