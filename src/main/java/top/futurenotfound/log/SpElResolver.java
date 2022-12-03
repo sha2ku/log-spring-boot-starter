@@ -1,4 +1,4 @@
-package top.futurenotfound.log.util;
+package top.futurenotfound.log;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

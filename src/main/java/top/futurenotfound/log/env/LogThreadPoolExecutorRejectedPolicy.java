@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @Getter
 @AllArgsConstructor
-public enum ThreadPoolExecutorRejectedPolicy {
+public enum LogThreadPoolExecutorRejectedPolicy {
     //丢弃当前任务并报异常
     ABORT(new ThreadPoolExecutor.AbortPolicy()),
     //直接丢弃当前任务

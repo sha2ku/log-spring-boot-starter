@@ -1,10 +1,9 @@
-package top.futurenotfound.log.util;
+package top.futurenotfound.log.env;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import top.futurenotfound.log.properties.LogExecutorPoolProperties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -14,11 +13,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Component
 @Slf4j
 @Getter
-public class ThreadPoolExecutorHandler {
+public class LogThreadPoolExecutor {
     private final LogExecutorPoolProperties logExecutorPoolProperties;
     private ThreadPoolExecutor logExecutorPool;
 
-    public ThreadPoolExecutorHandler(LogExecutorPoolProperties logExecutorPoolProperties) {
+    public LogThreadPoolExecutor(LogExecutorPoolProperties logExecutorPoolProperties) {
         this.logExecutorPoolProperties = logExecutorPoolProperties;
     }
 

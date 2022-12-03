@@ -1,4 +1,4 @@
-package top.futurenotfound.log.properties;
+package top.futurenotfound.log.env;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

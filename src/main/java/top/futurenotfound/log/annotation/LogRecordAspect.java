@@ -14,9 +14,9 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import top.futurenotfound.log.LogHandler;
-import top.futurenotfound.log.LogInfo;
-import top.futurenotfound.log.util.SpElResolver;
-import top.futurenotfound.log.util.ThreadPoolExecutorHandler;
+import top.futurenotfound.log.env.LogInfo;
+import top.futurenotfound.log.SpElResolver;
+import top.futurenotfound.log.env.LogThreadPoolExecutor;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class LogRecordAspect {
     private final LogHandler logHandler;
     private final SpElResolver spElResolver;
     private final ApplicationContext applicationContext;
-    private final ThreadPoolExecutorHandler threadPoolExecutorHandler;
+    private final LogThreadPoolExecutor logThreadPoolExecutor;
 
     @Pointcut("@annotation(top.futurenotfound.log.annotation.LogRecord)")
     public void pointcut() {
@@ -84,7 +84,7 @@ public class LogRecordAspect {
 
         LogInfo currentLogInfo = new LogInfo(operator, timestamp, content, modelName);
 
-        ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorHandler.getLogExecutorPool();
+        ThreadPoolExecutor threadPoolExecutor = logThreadPoolExecutor.getLogExecutorPool();
         threadPoolExecutor.execute(() -> logHandler.handle(currentLogInfo));
 
         return result;
