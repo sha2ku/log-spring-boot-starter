@@ -2,7 +2,6 @@ package top.futurenotfound.log.env;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import top.futurenotfound.log.env.ThreadPoolExecutorRejectedPolicy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,5 +14,5 @@ public class LogExecutorPoolProperties {
     private TimeUnit timeUnit = TimeUnit.SECONDS;
     private int queueCapacity = 100000;
 
-    private ThreadPoolExecutorRejectedPolicy rejectedPolicy = ThreadPoolExecutorRejectedPolicy.ABORT;
+    private LogThreadPoolExecutorRejectedPolicy rejectedPolicy = LogThreadPoolExecutorRejectedPolicy.ABORT;
 }
